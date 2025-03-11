@@ -1,6 +1,6 @@
-*/bin
-*/obj
-.vs/
+OcelotPractice/OcelotPractice/bin/
+OcelotPractice/OcelotPractice/obj/
+OcelotPractice/.vs/
 
 # Log file
 *.log

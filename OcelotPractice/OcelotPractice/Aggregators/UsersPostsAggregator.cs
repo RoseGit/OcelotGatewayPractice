@@ -7,8 +7,16 @@ using System.Net.Http.Headers;
 
 namespace OcelotPractice.Aggregators
 {
+    /// <summary>
+    /// Combines the response of two or more services using code.
+    /// </summary>
     public class UsersPostsAggregator : IDefinedAggregator
     {
+        /// <summary>
+        /// Combines the response of two or more services using code.
+        /// </summary>
+        /// <param name="responses"><see cref="HttpContext"/></param>
+        /// <returns>The answer the user expects.</returns>
         public async Task<DownstreamResponse> Aggregate(List<HttpContext> responses)
         {
             var userResponseContent = await responses[0].Items.DownstreamResponse().Content.ReadAsStringAsync();
@@ -25,8 +33,9 @@ namespace OcelotPractice.Aggregators
 
 
             var postByUserString = JsonConvert.SerializeObject(users);
-            var stringContent = new StringContent(postByUserString) { 
-                Headers = { ContentType = new MediaTypeHeaderValue("application/json")}
+            var stringContent = new StringContent(postByUserString)
+            {
+                Headers = { ContentType = new MediaTypeHeaderValue("application/json") }
             };
 
 

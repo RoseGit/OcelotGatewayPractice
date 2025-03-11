@@ -5,11 +5,10 @@
       "RouteKeys": [ "users", "posts" ]
     },
     {
-      "UpstreamPathTemplate": "/api2/usersposts",
+      "UpstreamPathTemplate": "/code/usersposts",
       "RouteKeys": [ "users", "posts" ],
       "Aggregator": "UsersPostsAggregator"
-    }
-
+    },
   ],
   "Routes": [
     {
@@ -23,7 +22,10 @@
           "Port": 443
         }
       ],
-      "DownstreamPathTemplate": "/users"
+      "DownstreamPathTemplate": "/users",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
     },
     {
       "key": "posts",
@@ -49,6 +51,75 @@
         }
       ],
       "DownstreamPathTemplate": "/{path}"
+    },
+    {
+      "key": "users-bearer",
+      "UpstreamPathTemplate": "/bearer-security/users",
+      "UpstreamHttpMethod": [ "GET" ],
+
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "jsonplaceholder.typicode.com",
+          "Port": 443
+        }
+      ],
+      "DownstreamPathTemplate": "/users",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "key": "users-authorization",
+      "UpstreamPathTemplate": "/authorization-security/users",
+      "UpstreamHttpMethod": [ "GET" ],
+
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "jsonplaceholder.typicode.com",
+          "Port": 443
+        }
+      ],
+      "DownstreamPathTemplate": "/users",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "UserType": "Admin"
+      }
+    },
+    {
+      "key": "users-limit-ddos",
+      "UpstreamPathTemplate": "/users-limit-ddos/users",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "jsonplaceholder.typicode.com",
+          "Port": 443
+        }
+      ],
+      "DownstreamPathTemplate": "/users",
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "3s",
+        "PeriodTimespan": 5,
+        "Limit": 1
+      }
+    },
+    {
+      "key": "users-delagatin-handler",
+      "UpstreamPathTemplate": "/users-delagatin-handler/users",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "jsonplaceholder.typicode.com",
+          "Port": 443
+        }
+      ],
+      "DownstreamPathTemplate": "/users",
+      "DelegatingHandlers": [
+        "BlackListHandler"
+      ]
     }
   ],
   "GlobalConfiguration": {
